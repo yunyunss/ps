@@ -12,12 +12,13 @@ def sizeUp(func):
         self.size += 1
     
     return wrapper
+
 def sizeDown(func):
     """
     sizeDown함수는 요소를 삭제하는 함수를 실행시킬 때 데코레이터로 사용되어 해당 함수가 실행된 클래스의 size요소를 1 감소시킨다.
     """
     def wrapper(self, *args, **kwargs):
-        func(self, args, kwargs)
+        func(self, *args, **kwargs)
         self.size -= 1
     return wrapper
 
@@ -85,13 +86,13 @@ class myList:
             self.append(value)
         elif self.size < index:
             raise self.errors["Index"][0]
-        
-        newNode = node(value).setNext(self.find(index, True))
-        newNode = self.find(index-1, True).setNext(newNode) if index != 0 else newNode
-        self.head.setNext(newNode)
+        else:
+            newNode = node(value).setNext(self.find(index, True))
+            newNode = self.find(index-1, True).setNext(newNode) if index != 0 else newNode
+            self.head.setNext(newNode)
         
     @sizeDown
-    def deleteElement(self, index:int):
+    def delete(self, index:int):
         """선택한 위치의 요소를 제거한다.
 
         Args:
@@ -100,9 +101,14 @@ class myList:
         if self.size < index:
             raise self.errors["Index"][0]
 
+        newNode = self.find(index+1, True) if index + 1 < self.size else None
+        newNode = self.find(index-1, True).setNext(newNode) if index != 0 else newNode
+        self.head.setNext(newNode)
+
 if __name__ == "__main__":
     List = myList()
     List.append(3)
     List.append(7)
-    List.insert(0, 1)
+    List.insert(2, 1)
+    # List.delete(2)
     print(List.toList())
