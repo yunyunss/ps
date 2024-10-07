@@ -1,0 +1,1 @@
+print((lambda x,y:x**2-y**2)(*list(map(int,input().split()))))
